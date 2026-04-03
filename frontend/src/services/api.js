@@ -33,3 +33,33 @@ export const register = async (formData) => {
 
     return data;
 };
+
+
+export const getApplications = async () => {
+  const res = await fetch(`${API_URL}/api/applications`);
+  return res.json();
+};
+
+export const createApplication = async (form) =>{
+  const res = await fetch(`${API_URL}/api/applications`,{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({form})
+  });
+}
+
+export const deleteApplications = async (id) => {
+  const res = await fetch(`${API_URL}/api/applications/${id}`,{
+    method: "DELETE",
+  });
+};
+
+export const updateApplication = async (id, data) => {
+  await fetch(`${API_URL}/api/applications/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+};
