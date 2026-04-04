@@ -9,10 +9,6 @@ export const createApplication = async (req, res) => {
     // Read the lowercase header
     const userId = req.headers['x-user-id']; 
     
-    // 🚨 THIRD TRUTH LOG
-    console.log("3️⃣ [APP SERVICE] Received userId:", userId);
-    console.log("3️⃣ [APP SERVICE] Received company:", company);
-
     // Prevent saving if the header is literally the string "undefined"
     if (!userId || userId === "undefined") {
       return res.status(400).json({ msg: "Missing valid User ID" });
@@ -43,6 +39,17 @@ export const getApplications = async (req, res) => {
   }
 };
 
+
+export const getData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.headers['x-user-id'];
+    const apps = await Application.find({ userId: id });
+    res.json(apps);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
 
 // 🔹 UPDATE STATUS
 export const updateApplication = async (req, res) => {

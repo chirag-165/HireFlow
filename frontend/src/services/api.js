@@ -90,3 +90,8 @@ export const updateApplication = async (id, updateData) => {
     body: JSON.stringify(updateData),
   });
 };
+
+// 🔹 GETSTATS
+export const getAnalytics = async () => {
+  return await authFetch("/api/analytics/stats");
+};

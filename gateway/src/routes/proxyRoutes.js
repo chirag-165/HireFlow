@@ -37,4 +37,27 @@ router.use(
   })
 );
 
+router.use(
+  "/analytics",
+  verifyToken, 
+  createProxyMiddleware({
+    target: "http://127.0.0.1:5003",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/": "/api/analytics/", 
+    },
+    on: {
+      proxyReq: (proxyReq, req, res) => {
+        console.log(" [PROXY] Injecting Header x-user-id:", req.userId);
+        
+        if (req.userId) {
+          proxyReq.setHeader("x-user-id", String(req.userId)); 
+        }
+        fixRequestBody(proxyReq, req);
+      }
+    }
+  })
+);
+
+
 export default router;
