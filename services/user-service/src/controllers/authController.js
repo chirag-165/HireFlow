@@ -82,3 +82,15 @@ export const register = async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 };
+
+export const getUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.find({ _id : userId });
+
+     if (!user) return res.status(404).json({ msg: "User not found or unauthorized" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+}

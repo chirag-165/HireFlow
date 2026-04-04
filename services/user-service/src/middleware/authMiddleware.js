@@ -10,6 +10,7 @@ export const verifyToken = (req, res, next) => {
     
     // 🔥 BULLETPROOF: Check every common way an ID is stored in a JWT
     req.userId = decoded.userId || decoded.id || decoded._id;
+
     if (!req.userId) {
       return res.status(401).json({ msg: "Token valid, but no ID found inside it." });
     }
