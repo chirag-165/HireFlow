@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const appSchema = new mongoose.Schema({
-    userID: {type: String , required: true},
+    userId: {type: String , required: true},
     company: String,
     role: String,
     status:{
@@ -12,6 +12,6 @@ const appSchema = new mongoose.Schema({
     notes: String
 },{timestamps: true});
 
-const Application = mongoose.Model("Application",appSchema);
+const Application = mongoose.model("Application",appSchema);
 
 export default Application;

@@ -1,7 +1,6 @@
-import User from '../models/User.js'
-import bcrypt, { compare } from "bcryptjs";
+import User from '../models/User.js';
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
 
 export const login = async (req, res) => {
   try {
@@ -12,13 +11,11 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
@@ -30,12 +27,10 @@ export const login = async (req, res) => {
     );
 
     res.json({ token });
-
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
 };
-
 
 export const register = async (req, res) => {
   try {
@@ -50,18 +45,19 @@ export const register = async (req, res) => {
       domain,
     } = req.body;
 
-    // check user exists
+    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    // hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // resume (for now just filename)
+    // Get resume filename from Multer
     const resumeUrl = req.file?.originalname || "";
 
+    // Create user in DB
     const user = await User.create({
       name,
       email,
@@ -74,7 +70,7 @@ export const register = async (req, res) => {
       resumeUrl,
     });
 
-    // JWT
+    // Generate JWT
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
@@ -82,7 +78,6 @@ export const register = async (req, res) => {
     );
 
     res.status(201).json({ token });
-
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }

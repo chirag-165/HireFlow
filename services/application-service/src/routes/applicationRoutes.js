@@ -1,11 +1,11 @@
 import express from "express";
-import { getApplication ,createApplication ,updateApplication ,deleteApplication } from '../controllers/applicationController.js'
+import { getApplications ,createApplication ,updateApplication ,deleteApplication } from '../controllers/applicationController.js'
 
 const router = express.Router();
 
 router.post('/',createApplication);
-router.get('/',getApplication);
-router.update('/:id',deleteApplication);
-router.patch('/:id',updateApplication);
+router.get('/',getApplications);
+router.delete('/:id',deleteApplication);
+router.put('/:id',updateApplication);
 
 export default router;

@@ -104,17 +104,25 @@ const Application = () => {
     fetchApps();
   }, []);
 
-  const fetchApps = async () => {
+const fetchApps = async () => {
+  try {
     const data = await getApplications();
     setApps(data);
-  };
+  } catch (err) {
+    console.error("Fetch error:", err.message);
+  }
+};
 
-  const handleCreate = async () => {
+const handleCreate = async () => {
+  try {
     await createApplication(form);
     setShowModal(false);
     setForm({ company: "", role: "", status: "Applied", notes: "" });
     fetchApps();
-  };
+  } catch (err) {
+    console.error("Create error:", err.message);
+  }
+};
 
   const handleDelete = async (id) => {
     await deleteApplication(id);
