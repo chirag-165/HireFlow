@@ -10,7 +10,11 @@ router.use(
     target: "http://127.0.0.1:5001",
     changeOrigin: true,
     pathRewrite: { "^/": "/api/auth/" },
-    onProxyReq: fixRequestBody, 
+     on: {
+      proxyReq: (proxyReq, req, res) => {
+        fixRequestBody(proxyReq, req);
+      }
+    },
   })
 );
 
@@ -26,8 +30,6 @@ router.use(
     },
     on: {
       proxyReq: (proxyReq, req, res) => {
-        console.log(" [PROXY] Injecting Header x-user-id:", req.userId);
-        
         if (req.userId) {
           proxyReq.setHeader("x-user-id", String(req.userId)); 
         }
@@ -48,8 +50,6 @@ router.use(
     },
     on: {
       proxyReq: (proxyReq, req, res) => {
-        console.log(" [PROXY] Injecting Header x-user-id:", req.userId);
-        
         if (req.userId) {
           proxyReq.setHeader("x-user-id", String(req.userId)); 
         }
