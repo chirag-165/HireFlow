@@ -1,52 +1,48 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PrivateRoute from './router/PrivateRouter';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
-import Login from './page/Login';
-import Register from './page/Register'
-import Dashboard from './page/Dashboard';
-import Application from './page/Application';
-import Setting from './page/Setting';
+// Layouts
+import MainLayout from './layouts/MainLayout';
 
-function App() {
+// Public pages
+import Login    from './pages/Login';
+import Register from './pages/Register';
+
+// Protected pages
+import Dashboard    from './pages/Dashboard';
+import Application from './pages/Application';
+import AIChat       from './pages/AIChat';
+import Profile      from './pages/Profile';
+import Pricing      from './pages/Pricing';
+
+const App = () => {
   return (
-    <Router>
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* Public */}
+            <Route path="/login"    element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Public Route */}
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+            {/* Protected — wrapped in MainLayout */}
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard"    element={<Dashboard />} />
+              <Route path="/applications" element={<Application />} />
+              <Route path="/chat"         element={<AIChat />} />
+              <Route path="/profile"      element={<Profile />} />
+              <Route path="/pricing"      element={<Pricing />} />
+            </Route>
 
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/application"
-          element={
-            <PrivateRoute>
-              <Application />
-             </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/setting"
-          element={
-            <PrivateRoute>
-              <Setting />
-            </PrivateRoute>
-          }
-        />
-
-      </Routes>
-    </Router>
+            {/* Fallback */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
