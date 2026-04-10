@@ -12,9 +12,12 @@ import Register from './pages/Register';
 // Protected pages
 import Dashboard    from './pages/Dashboard';
 import Application from './pages/Application';
+import Activity from './pages/Activity';
+import Analytics from './pages/Analytics';
 import AIChat       from './pages/AIChat';
 import Profile      from './pages/Profile';
 import Pricing      from './pages/Pricing';
+import Setting from './pages/Setting';
 
 const App = () => {
   return (
@@ -30,6 +33,9 @@ const App = () => {
             <Route element={<MainLayout />}>
               <Route path="/dashboard"    element={<Dashboard />} />
               <Route path="/applications" element={<Application />} />
+              <Route path="/activity"     element={<Activity />} />
+              <Route path="/analytics"    element={<Analytics />} />
+              <Route path="/settings"     element={<Setting />} />
               <Route path="/chat"         element={<AIChat />} />
               <Route path="/profile"      element={<Profile />} />
               <Route path="/pricing"      element={<Pricing />} />

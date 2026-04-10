@@ -45,11 +45,9 @@ export const login = async (email, password) => {
 
 // 🔹 REGISTER
 export const register = async (formData) => {
-  try{
-  console.log(formData);
   const res = await fetch(`${API_URL}/api/auth/register`, {
     method: "POST",
-    body:formData,
+    body: formData,
   });
 
   const data = await res.json();
@@ -59,10 +57,6 @@ export const register = async (formData) => {
   }
 
   return data;
-} catch (err) {
-  console.error("REGISTRATION ERROR:", err); // ADD THIS TO SEE THE REAL ERROR
-  res.status(500).json({ msg: err.message });
-}
 };
 
 
