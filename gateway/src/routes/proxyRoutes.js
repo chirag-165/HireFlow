@@ -1,13 +1,15 @@
 import express from "express";
 import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { verifyToken } from "../middleware/authMiddleware.js";
+import dotenv from 'dotenv'
+dotenv.config();
 
 const router = express.Router();
 
 router.use(
   "/auth",
   createProxyMiddleware({
-    target: "http://127.0.0.1:5001",
+    target: process.env.USER_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: { "^/": "/api/auth/" },
      on: {
@@ -23,7 +25,7 @@ router.use(
   "/applications",
   verifyToken, 
   createProxyMiddleware({
-    target: "http://127.0.0.1:5002",
+    target: process.env.APPLICATION_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/api/applications/", 
