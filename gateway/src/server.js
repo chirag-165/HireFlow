@@ -7,21 +7,21 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:5173', 
-  'https://hire-flow-gules.vercel.app' // Add your production frontend here
-];
-
+// Remove the strict allowedOrigins array and use a regex pattern instead
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    
+    // Check if the origin is localhost OR if it ends with vercel.app
+    if (origin === 'http://localhost:5173' || origin.endsWith('vercel.app')) {
+      return callback(null, true);
+    } else {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
-    return callback(null, true);
-  }
+  },
+  credentials: true // Important if you are using cookies/sessions
 }));
 
 app.use(express.json());
