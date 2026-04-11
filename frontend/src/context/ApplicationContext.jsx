@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { updateApplication, getApplications } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const ApplicationContext = createContext();
 
 export function ApplicationProvider({ children }) {
+  const { token } = useAuth();
   const [applications, setApplications] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,17 +24,14 @@ export function ApplicationProvider({ children }) {
   // 1. Initial Fetch on Load
   useEffect(() => {
     loadData();
-  }, []);
+  }, [token]);
 
   // 2. The Master Update Function
   // ApplicationContext.jsx
 
 const updateApplicationStatus = async (id, newStatus,) => {
-  
-  console.log("Current applications:", applications);
-  console.log("Target ID:", id);
   const targetApp = applications.find(a => a._id === id);
-  console.log("Context:",targetApp)
+  // console.log("Context:",targetApp)
   if (!targetApp) {
     console.warn("Application not found in state. If this is a new app, ensure it was saved with an _id.");
     return;
