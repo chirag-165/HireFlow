@@ -34,6 +34,7 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
+    console.log("Received registration data:", req.body);
     const {
       name,
       email,

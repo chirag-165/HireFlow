@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // ✅ Gateway
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Gateway
 
 // 🔹 AUTH FETCH (WITH TOKEN)
 const authFetch = async (endpoint, options = {}) => {
