@@ -1,9 +1,11 @@
-const API_URL = import.meta.env.VITE_API_URL // ✅ Gateway
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Gateway
 
 // 🔹 AUTH FETCH (WITH TOKEN)
 const authFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem("token");
-
+  console.log("AuthFetch called with endpoint:", endpoint);
+  console.log("Options:", options);
+  console.log("Token:", token);
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -62,6 +64,7 @@ export const register = async (formData) => {
 
 // 🔹 GET APPLICATIONS
 export const getApplications = async () => {
+  
   return await authFetch("/api/applications");
 };
 
