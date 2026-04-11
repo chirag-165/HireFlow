@@ -27,6 +27,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/api',proxyRoutes);
 
+app.get('/test', (req, res) => res.send('Server is up!'));
 
 app.listen(process.env.PORT,()=>{
     console.log("Gateway Running on port " + process.env.PORT);
