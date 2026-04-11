@@ -45,7 +45,7 @@ router.use(
   "/analytics",
   verifyToken, 
   createProxyMiddleware({
-    target: "http://127.0.0.1:5003",
+    target: process.env.Analytic_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/api/analytics/", 
