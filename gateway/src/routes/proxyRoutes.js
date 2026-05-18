@@ -1,16 +1,22 @@
 import express from "express";
 import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { verifyToken } from "../middleware/authMiddleware.js";
+import dotenv from 'dotenv'
+dotenv.config();
 
 const router = express.Router();
 
 router.use(
   "/auth",
   createProxyMiddleware({
-    target: "http://127.0.0.1:5001",
+    target: process.env.USER_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: { "^/": "/api/auth/" },
-    onProxyReq: fixRequestBody, 
+     on: {
+      proxyReq: (proxyReq, req, res) => {
+        fixRequestBody(proxyReq, req);
+      }
+    },
   })
 );
 
@@ -19,15 +25,13 @@ router.use(
   "/applications",
   verifyToken, 
   createProxyMiddleware({
-    target: "http://127.0.0.1:5002",
+    target: process.env.APPLICATION_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/api/applications/", 
     },
     on: {
       proxyReq: (proxyReq, req, res) => {
-        console.log(" [PROXY] Injecting Header x-user-id:", req.userId);
-        
         if (req.userId) {
           proxyReq.setHeader("x-user-id", String(req.userId)); 
         }
@@ -41,15 +45,13 @@ router.use(
   "/analytics",
   verifyToken, 
   createProxyMiddleware({
-    target: "http://127.0.0.1:5003",
+    target: process.env.Analytic_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/api/analytics/", 
     },
     on: {
       proxyReq: (proxyReq, req, res) => {
-        console.log(" [PROXY] Injecting Header x-user-id:", req.userId);
-        
         if (req.userId) {
           proxyReq.setHeader("x-user-id", String(req.userId)); 
         }

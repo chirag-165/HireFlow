@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Layouts
@@ -22,7 +21,6 @@ import Setting from './pages/Setting';
 const App = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
         <Router>
           <Routes>
             {/* Public */}
@@ -46,7 +44,6 @@ const App = () => {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Router>
-      </AuthProvider>
     </ThemeProvider>
   );
 };
