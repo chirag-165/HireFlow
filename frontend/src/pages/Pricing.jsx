@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
+import { m, motion } from 'framer-motion';
 import { pageVariants, containerVariants, itemVariants } from '../utils/motionVariants';
 import { CheckCircle2, Zap } from 'lucide-react';
+import { useState } from 'react';
 
 const tiers = [
   {
@@ -17,7 +18,7 @@ const tiers = [
     period: '/mo',
     description: 'Everything you need to land your dream job.',
     features: ['Unlimited applications', 'AI resume tailored feedback', 'Email template generator', 'Advanced analytics'],
-    buttonText: 'Start 7-day free trial',
+    buttonText: 'Enroll Now',
     popular: true,
   },
   {
@@ -32,6 +33,15 @@ const tiers = [
 ];
 
 export default function Pricing() {
+  const [model, setModel] = useState(null);
+
+  
+  const handlePlan = (tier) => () => {
+    if (tier.name === 'Free') {
+      window.location.href = '/dashboard';
+    }else{
+      setModel(tier);
+    } }
   return (
     <motion.div initial="initial" animate="animate" exit="exit" variants={pageVariants} className="max-w-7xl mx-auto py-12 px-4 sm:px-6">
       <div className="text-center max-w-3xl mx-auto mb-16">
@@ -47,9 +57,9 @@ export default function Pricing() {
             className={`relative rounded-3xl p-8 border ${tier.popular ? 'bg-primary-900/10 border-primary-500 shadow-premium-dark shadow-primary-500/20 md:-mt-8 md:mb-8 scale-[1.02]' : 'bg-surface-light dark:bg-surface-dark border-border-subtle shadow-premium dark:shadow-premium-dark'}`}
           >
             {tier.popular && (
-              <div className="absolute top-0 inset-x-0 flex justify-center -mt-4">
+              <div className="absolute top-0 inset-x-0 flex justify-center -mt-6">
                 <span className="bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> Most Popular
+                  <Zap className="w-3 h-4" /> Most Popular
                 </span>
               </div>
             )}
@@ -73,9 +83,27 @@ export default function Pricing() {
               ))}
             </ul>
 
-            <button className={`w-full py-3 px-6 rounded-xl font-bold transition-all ${tier.popular ? 'bg-primary-600 hover:bg-primary-500 text-white shadow-lg shadow-primary-500/25' : 'bg-surface-dark border border-border-subtle hover:bg-border-subtle text-text-main'}`}>
+            <button onClick={handlePlan(tier)} className={'w-full py-3 px-6 rounded-xl font-bold transition-all bg-surface-dark border border-border-subtle hover:bg-border-subtle text-text-main'}>
               {tier.buttonText}
             </button>
+              {model && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+                  <div className="bg-black p-8 rounded-2xl w-96 relative border border-border-subtle">
+                    <button onClick={() => setModel(null)} className="absolute text-2xl top-4 right-4 text-gray-500 hover:text-gray-700">
+                      &times;
+                    </button>
+                    <h2 className="text-2xl font-bold mb-4">Interested in the {model.name} plan?</h2>
+                    <p className="mb-6 text-gray-600">Please enter your email, and we'll get in touch with you shortly.</p>
+                    <form action="onsubmit">
+                      <input type="email" placeholder="Enter your email" className="bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
+                      <input type="text" value={model.name || ''} onChange={(e) => setModel({...model, name: e.target.value})} placeholder="Full Name" className="bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
+                      <button type="submit" className="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              )}
           </motion.div>
         ))}
       </motion.div>
