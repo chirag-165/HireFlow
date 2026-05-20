@@ -9,8 +9,6 @@ export const generateResponse = async(req, res) => {
         const authHeader = req.headers.authorization || '';
         const token = authHeader.split(' ')[1] || null;
 
-}
-
         if (!token) {
             console.error('AI Controller - missing token');
             return res.status(401).json({ error: 'Missing authorization token' });
