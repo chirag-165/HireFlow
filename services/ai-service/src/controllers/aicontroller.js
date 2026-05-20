@@ -9,15 +9,6 @@ export const generateResponse = async(req, res) => {
         const authHeader = req.headers.authorization || '';
         const token = authHeader.split(' ')[1] || null;
 
-        // console.log('AI Controller - incoming request:', {
-        //     path: req.path,
-        //     body: req.body,
-        //     userId,
-        // });
-
-        if (!process.env.GOOGLE_API_KEY) {
-        console.error('Missing GOOGLE_API_KEY in environment for AI service. Set GOOGLE_API_KEY in .env or your environment.');
-        process.exit(1);
 }
 
         if (!token) {
