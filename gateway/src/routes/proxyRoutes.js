@@ -20,6 +20,20 @@ router.use(
   })
 );
 
+router.use(
+  "/user",
+  createProxyMiddleware({
+    target: process.env.USER_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { "^/": "/api/user/" },
+     on: {
+      proxyReq: (proxyReq, req, res) => {
+        fixRequestBody(proxyReq, req);
+      }
+    },
+  })
+);
+
 // 🔒 APPLICATION ROUTES
 router.use(
   "/applications",
@@ -42,10 +56,33 @@ router.use(
 );
 
 router.use(
+  "/ai",
+  verifyToken,
+  createProxyMiddleware({
+    target: process.env.AI_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { "^/": "/api/ai/" },
+     on: {
+      proxyReq: (proxyReq, req, res) => {
+        // forward user id and authorization header to AI service
+        if (req.userId) {
+          proxyReq.setHeader("x-user-id", String(req.userId));
+        }
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+          proxyReq.setHeader("Authorization", authHeader);
+        }
+        fixRequestBody(proxyReq, req);
+      }
+    },
+  })
+);
+
+router.use(
   "/analytics",
   verifyToken, 
   createProxyMiddleware({
-    target: process.env.Analytic_SERVICE_URL,
+    target: process.env.ANALYTICS_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/api/analytics/", 

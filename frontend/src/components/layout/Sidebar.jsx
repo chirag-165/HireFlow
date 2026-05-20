@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard, KanbanSquare, Activity, ChartColumn, MessageSquare, Settings, BriefcaseBusiness, LogOut, ChevronLeft, CreditCard } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from 'react-router-dom';
+
 
 const items = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -8,13 +10,13 @@ const items = [
   { to: "/activity", label: "Activity Feed", icon: Activity },
   { to: "/chat", label: "AI Chat", icon: MessageSquare },
   { to: "/pricing", label: "Pricing", icon: CreditCard },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/settings", label: "Personalization", icon: Settings },
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {
   const { user, logout } = useAuth();
   const width = collapsed ? 64 : 220;
-
+  const nav = useNavigate();
   return (
     <aside className="fixed left-0 top-0 z-30 flex h-screen flex-col border-r p-2" style={{ width, borderColor: "var(--color-border)", background: "var(--color-sidebar-bg)" }}>
       <button className="interactive mb-4 flex items-center gap-2 rounded-lg p-2 text-left" onClick={onToggle}>
@@ -40,11 +42,13 @@ export default function Sidebar({ collapsed, onToggle }) {
           );
         })}
       </nav>
-      <button className="interactive glass-card mt-4 flex items-center gap-2 p-2 text-left" onClick={logout}>
+      <div className="interactive glass-card mt-4 flex items-center gap-2 p-2 text-left cursor-pointer" onClick={() => nav('/settings')}>
         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-xs">{user?.name?.[0]?.toUpperCase() || "U"}</div>
         {!collapsed ? <span className="truncate text-sm">{user?.name || "User"}</span> : null}
-        {!collapsed ? <LogOut className="ml-auto h-4 w-4" /> : null}
-      </button>
+        <button onClick={(e) => { e.stopPropagation(); logout(); }} className="ml-auto">
+         {!collapsed ? <LogOut className="ml-auto h-4 w-4" /> : null}
+        </button>
+      </div>
     </aside>
   );
 }

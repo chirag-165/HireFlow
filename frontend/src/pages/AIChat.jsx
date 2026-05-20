@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { pageVariants } from '../utils/motionVariants';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { askAI } from '../services/api.js';
+import ReactMarkdown from 'react-markdown';
 
 export default function AIChat() {
   const [messages, setMessages] = useState([
@@ -19,24 +21,32 @@ export default function AIChat() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = { id: Date.now(), text: input, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = input; // Capture the current input value
     setInput('');
     setIsTyping(true);
-
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+    const ai = await askAI(currentInput); // Call the API to get AI response
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        text: ai.response,
+        sender: 'bot'
+      }]);
+    } catch (err) {
       setIsTyping(false);
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
-        text: "That sounds like a great plan! I can certainly help you optimize your profile for that role. Could you paste the job description here?",
+        text: "Sorry, something went wrong. Please try again later.",
         sender: 'bot'
       }]);
-    }, 1500);
+    } finally{
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -70,7 +80,7 @@ export default function AIChat() {
                 {msg.sender === 'user' ? <User className="w-4 h-4 text-slate-500 dark:text-slate-300" /> : <Bot className="w-4 h-4 text-primary-600 dark:text-primary-400" />}
               </div>
               <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.sender === 'user' ? 'bg-primary-600 text-white rounded-tr-sm' : 'bg-surface-light dark:bg-surface-dark border border-border-subtle shadow-sm rounded-tl-sm text-text-main'}`}>
-                {msg.text}
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
             </div>
           </div>

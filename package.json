@@ -6,7 +6,8 @@
   "start:user": "nodemon --cwd services/user-service src/server.js",
   "start:application": "nodemon --cwd services/application-service src/server.js",
   "start:analytics": "nodemon --cwd services/analytics-service src/server.js",
-  "dev": "concurrently --names \"GATEWAY,USER,APP,ANALYTICS\" --prefix-colors \"blue,green,yellow,magenta\" \"npm run start:gateway\" \"npm run start:user\" \"npm run start:application\" \"npm run start:analytics\""
+  "start:ai": "nodemon --cwd services/ai-service src/server.js",
+  "dev": "concurrently --names \"GATEWAY,USER,APP,ANALYTICS,AI\" --prefix-colors \"blue,green,yellow,magenta,white\" \"npm run start:gateway\" \"npm run start:user\" \"npm run start:application\" \"npm run start:analytics\" \"npm run start:ai\""
 }
 ,
   "dependencies": {

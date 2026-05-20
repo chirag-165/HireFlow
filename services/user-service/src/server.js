@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import {connectDB} from "./config/db.js"; 
 import cors from 'cors'
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(cors());
 connectDB();
 // Mount the routes so they match the Gateway's incoming request exactly
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes); // For getUser route
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

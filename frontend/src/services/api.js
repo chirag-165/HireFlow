@@ -1,16 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL; // ✅ Gateway
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // ✅ Gateway
 
 // 🔹 AUTH FETCH (WITH TOKEN)
 const authFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem("token");
-  console.log("AuthFetch called with endpoint:", endpoint);
-  console.log("Options:", options);
-  console.log("Token:", token);
+  // console.log("AuthFetch called with endpoint:", endpoint);
+  // console.log("Options:", options);
+  // console.log("Body:", options.body);
+  // console.log("Token:", token);
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,
       ...(options.headers || {}), // ✅ correct merge
     },
   });
@@ -97,4 +98,29 @@ export const updateApplication = async (id, updateData) => {
 // 🔹 GETSTATS
 export const getStats = async () => {
   return await authFetch("/api/analytics/stats");
+};
+
+export const updatePlan = async (email, planName) => {
+  return await authFetch("/api/user/plan", {
+    method: "POST",
+    body: JSON.stringify({email, planName}),
+  });
+};
+
+export const askAI = async (message) => {
+  return await authFetch("/api/ai/chat", {
+    method: "POST",
+    body: JSON.stringify({ message }),
+  });
+}
+
+export const getUserProfile = async () => {
+  return await authFetch("/api/user/getUser");
+}
+
+export const updateUserProfile = async (profileData) => {
+  return await authFetch("/api/user/update", {
+    method: "PUT",
+    body: JSON.stringify(profileData),
+  });
 };

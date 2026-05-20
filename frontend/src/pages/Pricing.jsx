@@ -2,6 +2,7 @@ import { m, motion } from 'framer-motion';
 import { pageVariants, containerVariants, itemVariants } from '../utils/motionVariants';
 import { CheckCircle2, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { updatePlan } from '../services/api';
 
 const tiers = [
   {
@@ -34,14 +35,33 @@ const tiers = [
 
 export default function Pricing() {
   const [model, setModel] = useState(null);
-
+  const [email, setEmail] = useState('');
+  const [plan, setPlan] = useState('');
+  const [loading, setLoading] = useState(false);
   
   const handlePlan = (tier) => () => {
     if (tier.name === 'Free') {
       window.location.href = '/dashboard';
-    }else{
+    } else {
       setModel(tier);
-    } }
+      setPlan(tier.name);
+    }
+  };
+      
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      console.log("Submitting plan selection:", email, plan);
+      const response = await updatePlan(email, plan);
+      setModel(null);
+      setEmail('');
+    } catch (error) {
+      console.log("Error submitting plan:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <motion.div initial="initial" animate="animate" exit="exit" variants={pageVariants} className="max-w-7xl mx-auto py-12 px-4 sm:px-6">
       <div className="text-center max-w-3xl mx-auto mb-16">
@@ -86,7 +106,9 @@ export default function Pricing() {
             <button onClick={handlePlan(tier)} className={'w-full py-3 px-6 rounded-xl font-bold transition-all bg-surface-dark border border-border-subtle hover:bg-border-subtle text-text-main'}>
               {tier.buttonText}
             </button>
-              {model && (
+          </motion.div>
+        ))}
+        {model && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
                   <div className="bg-black p-8 rounded-2xl w-96 relative border border-border-subtle">
                     <button onClick={() => setModel(null)} className="absolute text-2xl top-4 right-4 text-gray-500 hover:text-gray-700">
@@ -94,18 +116,16 @@ export default function Pricing() {
                     </button>
                     <h2 className="text-2xl font-bold mb-4">Interested in the {model.name} plan?</h2>
                     <p className="mb-6 text-gray-600">Please enter your email, and we'll get in touch with you shortly.</p>
-                    <form action="onsubmit">
-                      <input type="email" placeholder="Enter your email" className="bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
-                      <input type="text" value={model.name || ''} onChange={(e) => setModel({...model, name: e.target.value})} placeholder="Full Name" className="bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
-                      <button type="submit" className="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600">
-                        Submit
+                    <form onSubmit={onSubmit}>
+                      <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-4 w-full rounded-xl py-3 px-4 bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
+                      <input type="text" value={plan} readOnly className="mb-6 w-full rounded-xl py-3 px-4 bg-surface-light dark:bg-surface-dark border border-border-subtle focus:ring-primary-500 focus:border-primary-500" />
+                      <button type="submit" disabled={loading || !email} className="w-full bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 disabled:opacity-60 disabled:cursor-not-allowed">
+                        {loading ? 'Submitting...' : 'Submit'}
                       </button>
                     </form>
                   </div>
                 </div>
               )}
-          </motion.div>
-        ))}
       </motion.div>
     </motion.div>
   );

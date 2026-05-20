@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, BriefcaseBusiness, CheckCircle2 } from "lucide-react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { register as registerAPI } from "../../services/api";
@@ -43,7 +43,18 @@ export default function RegisterPage() {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[55%_45%]">
-      <aside className="hidden md:block" />
+      <aside className="relative hidden overflow-hidden md:block">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#111827] via-[#1e40af33] to-[#0a0a0f]" />
+        <div className="relative p-10">
+          <div className="mb-4 flex items-center gap-2 text-lg font-semibold"><BriefcaseBusiness className="h-5 w-5" />HireFlow</div>
+          <h1 className="max-w-sm text-3xl font-semibold">Track every application with clarity.</h1>
+          <div className="mt-6 flex gap-2 text-xs">
+            <span className="glass-card px-2 py-1">Pipeline Insights</span>
+            <span className="glass-card px-2 py-1">Fast Updates</span>
+            <span className="glass-card px-2 py-1">Team-ready</span>
+          </div>
+        </div>
+      </aside>
       <main className="flex items-center justify-center p-6">
         <form className="w-full max-w-md space-y-3" onSubmit={onSubmit}>
           <h2 className="text-2xl font-semibold">Create account</h2>

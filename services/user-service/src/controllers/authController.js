@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import SelectPlan from '../models/selectPlan.js';
 
 export const login = async (req, res) => {
   try {
@@ -87,7 +88,7 @@ export const register = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const userId = req.userId;
-    const user = await User.find({ _id : userId });
+    const user = await User.findById(userId).select("-password");
 
      if (!user) return res.status(404).json({ msg: "User not found or unauthorized" });
     res.json(user);
@@ -95,3 +96,51 @@ export const getUser = async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 }
+
+export const selectPlan = async (req,res) => {
+  try{ 
+    const userId = req.userId;
+    const { planName, email } = req.body;
+    
+    if (!planName || !email) {
+      return res.status(400).json({ msg: "Plan name and email are required" });
+    }
+
+    const userPlan = await SelectPlan.create({
+      userId,
+      planName,
+      email
+    });
+
+    res.json({ msg: "Plan selected successfully", userPlan });
+
+    res.status(201).json({ msg: "Plan selected successfully", userPlan });  
+  }catch(err){
+    res.status(500).json({ msg: err.message });
+  }
+}
+
+export const updateUser = async (req, res) => {
+  try {
+    const allowedFields = ['name', 'education', 'currentRole', 'targetRole', 'experience', 'github', 'linkedin','domain','skills'];
+    const updateData = {};
+
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
+
+    const userId = req.userId;
+
+    const user = await User.findByIdAndUpdate({ _id: userId }, updateData, { new: true }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found or unauthorized" });
+    }
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};

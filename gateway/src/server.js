@@ -14,7 +14,7 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     // Check if the origin is localhost OR if it ends with vercel.app
-    if (origin === 'http://localhost:5173' || origin.endsWith('vercel.app')) {
+    if (origin === 'http://127.0.0.1:5173' || origin.endsWith('vercel.app')) {
       return callback(null, true);
     } else {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';

@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
   currentRole: String,
   targetRole: String,
   domain: String,
-
+  skills: [String],
+  github: String,
+  linkedin: String,
   resumeUrl: String,
 }, { timestamps: true });
 
