@@ -327,7 +327,7 @@ Add screenshots for:
 
 **Chirag Shetty**
 
-* GitHub: https://github.com/your-username
+* GitHub: https://github.com/chirag-165
 * LinkedIn: https://linkedin.com/in/chirag-shetty-a1827a261
 
 ---
